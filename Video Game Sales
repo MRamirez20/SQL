@@ -1,0 +1,128 @@
+1. How many games were made on each Platform in their lifetime from most to least made.
+
+SELECT Platform , COUNT(Platform) AS GamesMade
+FROM vgsales v 
+GROUP BY Platform
+ORDER BY COUNT(Platform) DESC;
+
+2. List each Publisher in the dataset.
+
+SELECT DISTINCT (Publisher) 
+FROM vgsales v ;
+
+3. What years were showed to have the highest recorded sales globally.
+
+SELECT year, SUM(Global_Sales) 
+FROM vgsales v 
+GROUP BY year
+ORDER BY SUM(Global_Sales)  DESC;
+
+4. What year did North America dominate in total sales and how much was made. 
+
+SELECT year, SUM(NA_Sales)
+FROM vgsales v 
+GROUP BY year
+ORDER BY SUM(NA_Sales) desc
+LIMIT 1;
+
+
+5. What were the total sales made in each genre of video games.
+
+SELECT Genre , SUM(Global_Sales) 
+FROM vgsales v 
+GROUP BY Genre 
+ORDER BY SUM(Global_Sales) DESC ;
+
+6. How much of the total genre sales belonged to NA alone.
+
+SELECT Genre , SUM(NA_Sales) 
+FROM vgsales v 
+GROUP BY Genre 
+ORDER BY SUM(NA_Sales) DESC ;
+
+7. What were the total sales made by each publisher.
+
+SELECT Publisher , SUM(Global_Sales)  
+FROM vgsales v 
+GROUP BY Publisher
+ORDER BY SUM(Global_Sales) DESC ;
+
+8. Which Publisher had the most sales 
+
+WITH sales AS(
+SELECT Publisher , SUM(Global_Sales)  
+FROM vgsales v 
+GROUP BY Publisher
+
+9. How many games did each publisher create.
+
+SELECT Publisher , COUNT(Publisher) 
+FROM  vgsales v 
+GROUP BY Publisher 
+ORDER BY COUNT(Publisher) DESC; 
+
+10. How many games did Ubisoft and Sega create.
+
+SELECT Publisher , COUNT(Publisher)
+FROM  vgsales v 
+WHERE Publisher = 'Ubisoft' or Publisher = 'Sega'
+GROUP BY Publisher 
+ORDER BY COUNT(Publisher) DESC
+
+--or-- 
+
+WITH gamesmade AS(
+SELECT Publisher , COUNT(Publisher) AS Total
+FROM  vgsales v 
+GROUP BY Publisher 
+)
+SELECT *
+FROM gamesmade
+WHERE Publisher = 'Sega' or Publisher = 'Ubisoft'
+ORDER BY total DESC;
+
+11. What were the publishers sales made in each region listed.
+
+SELECT Publisher , SUM(NA_Sales), SUM(EU_Sales),  SUM(JP_Sales), SUM(Other_Sales)  
+FROM vgsales v 
+GROUP BY Publisher
+;
+
+12. What were the region sales for Activision, Capcom, and Nintendo. Order by Publisher Ascending.
+
+SELECT Publisher , SUM(NA_Sales), SUM(EU_Sales),  SUM(JP_Sales), SUM(Other_Sales)  
+FROM vgsales v 
+WHERE Publisher IN ('Nintendo','Activision','Capcom')
+GROUP BY Publisher 
+ORDER BY Publisher 
+
+--or--
+
+WITH publisher_sales AS(
+SELECT Publisher , SUM(NA_Sales), SUM(EU_Sales),  SUM(JP_Sales), SUM(Other_Sales)  
+FROM vgsales v 
+GROUP BY Publisher
+)
+SELECT *
+FROM publisher_sales
+WHERE Publisher IN ('Nintendo','Activision','Capcom')
+ORDER BY Publisher 
+
+13. IN 2008, which game had the highest sales in EU and who published the game.
+
+WITH eugamesales AS(
+SELECT Name, Publisher , SUM(EU_Sales) AS sales
+FROM vgsales v
+WHERE year = '2009'
+GROUP BY Name , Publisher 
+)
+SELECT *
+FROM eugamesales
+ORDER BY sales DESC 
+LIMIT 1;
+
+14. What were the highest and lowest sales made in North America for each year.
+
+SELECT year, MIN(NA_Sales), MAX(NA_Sales) 
+FROM vgsales v 
+GROUP BY year;
